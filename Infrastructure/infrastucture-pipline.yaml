@@ -7,16 +7,16 @@ trigger:
     include:
     - Infrastructure/*
 
-pool:
-  name: LocalPool
-
 variables:
   resourceGroup: uan-rg-rts
   location: eastus
   subscription: 0cd1b4a4-98c0-48dd-900e-532a1f9a345c
+  vmImageName: 'ubuntu-latest'
 
 stages:
 - stage: Deploy
+  pool:
+    vmImage: $(vmImageName)
   jobs:
   - job: Deploy
     steps:
