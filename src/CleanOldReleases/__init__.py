@@ -18,4 +18,5 @@ def main(blob: func.InputStream):
 
   logging.info(f'Deleting old releases...')
   container_client.delete_blobs(*blob_list)
+  
   logging.info(f'Release processing complete.')
