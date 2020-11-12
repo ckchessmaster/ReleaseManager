@@ -1,0 +1,72 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - ReleaseManager/*
+
+variables:
+  subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
+  functionAppName: uan-fa-release-manager
+  vmImageName: 'ubuntu-latest'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/ReleaseManager'
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - bash: |
+        if [ -f extensions.csproj ]
+        then
+            dotnet build extensions.csproj --runtime ubuntu.16.04-x64 --output ./bin
+        fi
+      workingDirectory: $(workingDirectory)
+      displayName: 'Build extensions'
+    - task: UsePythonVersion@0
+      displayName: 'Use Python 3.8'
+      inputs:
+        versionSpec: 3.8
+    - bash: |
+        python -m venv worker_venv
+        source worker_venv/bin/activate
+        pip install -r requirements.txt
+      workingDirectory: $(workingDirectory)
+      displayName: 'Install application dependencies'
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
+      inputs:
+        rootFolderOrFile: '$(workingDirectory)'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+      artifact: drop
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: 'development'
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureFunctionApp@1
+            displayName: 'Azure functions app deploy'
+            inputs:
+              azureSubscription: '$(subscription)'
+              appType: functionAppLinux
+              appName: $(functionAppName)
+              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'

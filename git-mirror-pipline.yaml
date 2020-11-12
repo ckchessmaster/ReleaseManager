@@ -1,0 +1,17 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+pool:
+  name: LocalPool
+
+jobs:
+- job: update_mirror
+  displayName: Update Github Mirror
+  steps:
+  - script: 'git checkout master && git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" pull'
+    displayName: Checkout and Update Master
+  - script: git push --mirror https://$(GITHUB_PAT)@github.com/ckchessmaster/rts.git
+    displayName: Update Github Mirror

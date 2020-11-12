@@ -1,0 +1,300 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccount": {
+      "type": "String"
+    },
+    "appServicePlan": {
+      "type": "String"
+    },
+    "functionApp": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[parameters('storageAccount')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "minimumTlsVersion": "TLS1_2",
+        "allowBlobPublicAccess": true,
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "keyType": "Account",
+              "enabled": true
+            },
+            "blob": {
+              "keyType": "Account",
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(parameters('storageAccount'), '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(parameters('storageAccount'), '/default/clientreleases')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccount'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "publicAccess": "Blob"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(parameters('storageAccount'), '/default/azure-webjobs-hosts')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccount'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(parameters('storageAccount'), '/default/azure-webjobs-secrets')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccount'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2020-08-01-preview",
+      "name": "[concat(parameters('storageAccount'), '/default/scm-releases')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccount'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "properties": {
+        "defaultEncryptionScope": "$account-encryption-key",
+        "denyEncryptionScopeOverride": false,
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[parameters('appServicePlan')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Y1",
+        "tier": "Dynamic",
+        "size": "Y1",
+        "family": "Y",
+        "capacity": 0
+      },
+      "kind": "functionapp",
+      "properties": {
+        "perSiteScaling": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('functionApp')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlan'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+      ],
+      "location": "[resourceGroup().location]",
+      "kind": "functionapp,linux",
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(parameters('functionApp'), '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(parameters('functionApp'), '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
+        ],
+        "serverFarmId": "[parameters('appServicePlan')]",
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "siteConfig": {
+          "appSettings": [
+            {
+                "name": "AzureWebJobsStorage",
+                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccount'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount')),'2019-06-01').keys[0].value)]"
+            },
+            {
+                "name": "FUNCTIONS_WORKER_RUNTIME",
+                "value": "python"
+            },
+            {
+                "name": "FUNCTIONS_EXTENSION_VERSION",
+                "value": "~3"
+            }
+          ]
+        },
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": false,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 1536,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": false,
+        "redundancyMode": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('functionApp'), '/web')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('functionApp'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": -1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "Python|3.8",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "httpLoggingEnabled": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$uanreleasemanager",
+        "azureStorageAccounts": {},
+        "scmType": "None",
+        "use32BitWorkerProcess": false,
+        "webSocketsEnabled": false,
+        "alwaysOn": false,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": false
+          }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": []
+        },
+        "autoHealEnabled": false,
+        "cors": {
+          "allowedOrigins": [
+            "https://functions.azure.com",
+            "https://functions-staging.azure.com",
+            "https://functions-next.azure.com"
+          ],
+          "supportCredentials": false
+        },
+        "localMySqlEnabled": false,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('functionApp'), '/', parameters('functionApp'), '.azurewebsites.net')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('functionApp'))]"
+      ],
+      "properties": {
+        "siteName": "uanreleasemanager",
+        "hostNameType": "Verified"
+      }
+    }
+  ]
+}
