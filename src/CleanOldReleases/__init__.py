@@ -1,7 +1,7 @@
 import logging, os
 import azure.functions as func
 
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 def main(blob: func.InputStream):
   logging.info(f'Python blob trigger function triggered by new release: {blob.name}')
