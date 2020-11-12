@@ -24,7 +24,7 @@ stages:
       displayName: Create Resource Group
       inputs:
         azureSubscription: azure-default
-        scriptType: ps
+        scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: az group create --location $(location) --name $(resourceGroup) --subscription $(subscription)
     - task: AzureResourceGroupDeployment@2
