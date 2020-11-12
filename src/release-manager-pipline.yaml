@@ -5,7 +5,7 @@ trigger:
     - master
   paths:
     include:
-    - ReleaseManager/*
+    - src/*
 
 variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
