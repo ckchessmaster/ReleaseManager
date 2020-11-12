@@ -11,7 +11,7 @@ variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
   functionAppName: uan-fa-release-manager
   vmImageName: 'ubuntu-latest'
-  workingDirectory: '$(System.DefaultWorkingDirectory)/ReleaseManager'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/src'
 
 stages:
 - stage: Build
