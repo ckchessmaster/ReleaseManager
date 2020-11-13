@@ -215,8 +215,8 @@
               "value": "[reference(resourceId('Microsoft.Insights/components', parameters('applicationInsights')), '2018-05-01-preview').InstrumentationKey]"
             },
             {
-              "name": "[concat('InstrumentationKey=', reference(resourceId('Microsoft.Insights/components', parameters('applicationInsights')), '2018-05-01-preview').InstrumentationKey, ';IngestionEndpoint=https://eastus-0.in.applicationinsights.azure.com/')]",
-              "value": "APPLICATIONINSIGHTS_CONNECTION_STRING"
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[concat('InstrumentationKey=', reference(resourceId('Microsoft.Insights/components', parameters('applicationInsights')), '2018-05-01-preview').InstrumentationKey, ';IngestionEndpoint=https://eastus-0.in.applicationinsights.azure.com/')]"
             }
           ]
         },
