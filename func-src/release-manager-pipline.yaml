@@ -56,18 +56,24 @@ stages:
       displayName: 'Use Python 3.8'
       inputs:
         versionSpec: 3.8
-    - script: pip install -r requirements.txt
-      workingDirectory: $(workingDirectory)
+    - script: |
+        python -m venv antenv
+        source antenv/bin/activate
+        python -m pip install --upgrade pip
+        pip install setup
+        pip install -r requirements.txt
       displayName: 'Install Dependencies'
+      workingDirectory: $(workingDirectory)
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
         rootFolderOrFile: '$(workingDirectory)'
         includeRootFolder: false
         archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManager$(Build.BuildId).zip
         replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManager$(Build.BuildId).zip
+      displayName: 'Upload Package'
       artifact: drop
 - stage: Deploy
   displayName: Deploy
