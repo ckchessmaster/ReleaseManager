@@ -29,7 +29,6 @@ stages:
         versionSpec: 3.8
     - script: |
         pip install pytest
-        pit install pytest-cov
       workingDirectory: $(workingDirectory)
       displayName: 'Install Test Frameowrk'
     - script: pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
@@ -63,7 +62,7 @@ stages:
         source worker_venv/bin/activate
         pip install -r requirements.txt
       workingDirectory: $(workingDirectory)
-      displayName: 'Install application dependencies'
+      displayName: 'Install Dependencies'
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
