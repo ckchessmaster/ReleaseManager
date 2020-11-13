@@ -31,7 +31,7 @@ stages:
         pip install pytest
       workingDirectory: $(workingDirectory)
       displayName: 'Install Test Frameowrk'
-    - script: pytest tests --doctest-modules --junitxml=junit/test-results.xml
+    - script: pytest $(workingDirectory)/tests --doctest-modules --junitxml=junit/test-results.xml
       displayName: Run Tests
     - task: PublishTestResults@2
       displayName: Publish Test Results
