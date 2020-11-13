@@ -10,9 +10,27 @@
     },
     "functionApp": {
       "type": "String"
+    },
+    "applicationInsights": {
+      "type": "String"
     }
   },
   "resources": [
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2018-05-01-preview",
+      "name": "[parameters('applicationInsights')]",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "Flow_Type": "Redfield",
+        "Request_Source": "AppServiceEnablementCreate",
+        "RetentionInDays": 90,
+        "publicNetworkAccessForIngestion": "Enabled",
+        "publicNetworkAccessForQuery": "Enabled"
+      }
+    },
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2020-08-01-preview",
@@ -155,7 +173,8 @@
       "name": "[parameters('functionApp')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlan'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount'))]",
+        "[resourceId('microsoft.insights/components', parameters('applicationInsights'))]"
       ],
       "location": "[resourceGroup().location]",
       "kind": "functionapp,linux",
@@ -180,16 +199,24 @@
         "siteConfig": {
           "appSettings": [
             {
-                "name": "AzureWebJobsStorage",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccount'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount')),'2019-06-01').keys[0].value)]"
+              "name": "AzureWebJobsStorage",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccount'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccount')),'2019-06-01').keys[0].value)]"
             },
             {
-                "name": "FUNCTIONS_WORKER_RUNTIME",
-                "value": "python"
+              "name": "FUNCTIONS_WORKER_RUNTIME",
+              "value": "python"
             },
             {
-                "name": "FUNCTIONS_EXTENSION_VERSION",
-                "value": "~3"
+              "name": "FUNCTIONS_EXTENSION_VERSION",
+              "value": "~3"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('applicationInsights')), '2018-05-01-preview').InstrumentationKey]"
+            },
+            {
+              "name": "[concat('InstrumentationKey=', reference(resourceId('Microsoft.Insights/components', parameters('applicationInsights')), '2018-05-01-preview').InstrumentationKey, ';IngestionEndpoint=https://eastus-0.in.applicationinsights.azure.com/')]",
+              "value": "APPLICATIONINSIGHTS_CONNECTION_STRING"
             }
           ]
         },

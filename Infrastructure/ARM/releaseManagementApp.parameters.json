@@ -1,15 +1,18 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "storageAccount": {
-            "value": "uansagamerelease"
-        },
-        "appServicePlan": {
-            "value": "uan-asp-release-manager"
-        },
-        "functionApp": {
-          "value": "uan-fa-release-manager"
-      }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccount": {
+      "value": "uansagamerelease"
+    },
+    "appServicePlan": {
+      "value": "uan-asp-release-manager"
+    },
+    "functionApp": {
+      "value": "uan-fa-release-manager"
+    },
+    "applicationInsights": {
+      "value": "uan-ai-release-manager"
     }
+  }
 }
