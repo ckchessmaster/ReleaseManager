@@ -3,9 +3,9 @@ import azure.functions as func
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
-def main(blob: func.InputStream):
-  logging.info(f'Python blob trigger function triggered by new release: {blob.name}')
-  
+def main(req: func.HttpRequest) -> func.HttpResponse:
+  logging.info(f'Clean old releases reuqest received.\n')
+
   connect_str = os.getenv('AzureWebJobsStorage')
   blob_service_client = BlobServiceClient.from_connection_string(connect_str)
   container_client = blob_service_client.get_container_client("clientreleases")
