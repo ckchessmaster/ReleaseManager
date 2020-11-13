@@ -10,88 +10,80 @@ class FakeBlob:
     self.name = name
 
 class TestCleanOldReleases(unittest.TestCase):
-
-  def setUp(self):
-    self.request = func.HttpRequest(
-      method='POST',
-      body=None,
-      url='/api/CleanOldReleases'
-    )
-
   @mock.patch('CleanOldReleases.BlobServiceClient')
   def test_no_other_releases(self, mock_blob_service_client):
     # Arrange
     mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = [FakeBlob('OneReleaseToRuleThemAll-v1.2.3.zip')]
 
     # Act
-    main(self.request)
+    main(None)
 
     # Assert
     mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_not_called()
 
-  # @mock.patch('CleanOldReleases.BlobServiceClient')
-  # def test_major_version(self, mock_blob_service_client):
-  #   # Arrange
-  #   previous_releases = [
-  #     FakeBlob('OneReleaseToRuleThemAll-v2.1.1.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.2.1.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip')
-  #   ]
+  @mock.patch('CleanOldReleases.BlobServiceClient')
+  def test_major_version(self, mock_blob_service_client):
+    # Arrange
+    previous_releases = [
+      FakeBlob('OneReleaseToRuleThemAll-v2.1.1.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.2.1.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip')
+    ]
 
-  #   mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
+    mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
 
-  #   expected_delete = [
-  #     'OneReleaseToRuleThemAll-v1.2.1.zip',
-  #     'OneReleaseToRuleThemAll-v1.1.2.zip'
-  #   ]
+    expected_delete = [
+      'OneReleaseToRuleThemAll-v1.2.1.zip',
+      'OneReleaseToRuleThemAll-v1.1.2.zip'
+    ]
 
-  #   # Act
-  #   main(self.request)
+    # Act
+    main(None)
 
-  #   # Assert
-  #   mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
+    # Assert
+    mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
 
-  # @mock.patch('CleanOldReleases.BlobServiceClient')
-  # def test_minor_version(self, mock_blob_service_client):
-  #   # Arrange
-  #   previous_releases = [
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.3.1.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.2.1.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip')
-  #   ]
+  @mock.patch('CleanOldReleases.BlobServiceClient')
+  def test_minor_version(self, mock_blob_service_client):
+    # Arrange
+    previous_releases = [
+      FakeBlob('OneReleaseToRuleThemAll-v1.3.1.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.2.1.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip')
+    ]
 
-  #   mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
+    mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
 
-  #   expected_delete = [
-  #     'OneReleaseToRuleThemAll-v1.2.1.zip',
-  #     'OneReleaseToRuleThemAll-v1.1.2.zip'
-  #   ]
+    expected_delete = [
+      'OneReleaseToRuleThemAll-v1.2.1.zip',
+      'OneReleaseToRuleThemAll-v1.1.2.zip'
+    ]
 
-  #   # Act
-  #   main(self.request)
+    # Act
+    main(None)
 
-  #   # Assert
-  #   mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
+    # Assert
+    mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
 
-  # @mock.patch('CleanOldReleases.BlobServiceClient')
-  # def test_build_version(self, mock_blob_service_client):
-  #   # Arrange
-  #   previous_releases = [
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.1.3.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip'),
-  #     FakeBlob('OneReleaseToRuleThemAll-v1.1.1.zip')
-  #   ]
+  @mock.patch('CleanOldReleases.BlobServiceClient')
+  def test_build_version(self, mock_blob_service_client):
+    # Arrange
+    previous_releases = [
+      FakeBlob('OneReleaseToRuleThemAll-v1.1.3.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.1.2.zip'),
+      FakeBlob('OneReleaseToRuleThemAll-v1.1.1.zip')
+    ]
 
-  #   mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
+    mock_blob_service_client.from_connection_string().get_container_client().list_blobs.return_value = previous_releases
 
-  #   expected_delete = [
-  #     'OneReleaseToRuleThemAll-v1.1.2.zip',
-  #     'OneReleaseToRuleThemAll-v1.1.1.zip'
-  #   ]
+    expected_delete = [
+      'OneReleaseToRuleThemAll-v1.1.2.zip',
+      'OneReleaseToRuleThemAll-v1.1.1.zip'
+    ]
 
-  #   # Act
-  #   main(self.request)
+    # Act
+    main(None)
 
-  #   # Assert
-  #   mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
+    # Assert
+    mock_blob_service_client.from_connection_string().get_container_client().delete_blobs.assert_called_with(*expected_delete)
     

@@ -3,8 +3,8 @@ import azure.functions as func
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-  logging.info(f'Clean old releases reuqest received.\n')
+def main(mytimer: func.TimerRequest) -> None:
+  logging.info(f'Cleaning old releases...\n')
 
   connect_str = os.getenv('AzureWebJobsStorage')
   blob_service_client = BlobServiceClient.from_connection_string(connect_str)
@@ -30,10 +30,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
   previous_releases.remove(max_release)
 
-  logging.info(f'Deleting old releases...')
   container_client.delete_blobs(*previous_releases)
   
-  logging.info(f'Release processing complete.')
+  logging.info(f'Cleaning complete.')
 
 def get_version_from_name(name):
   version_tag = name.split('-')
