@@ -70,9 +70,9 @@ stages:
         rootFolderOrFile: '$(workingDirectory)'
         includeRootFolder: false
         archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManager$(Build.BuildId).zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
         replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManager$(Build.BuildId).zip
+    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
       displayName: 'Upload Package'
       artifact: drop
 - stage: Deploy
@@ -95,4 +95,4 @@ stages:
               azureSubscription: '$(subscription)'
               appType: functionAppLinux
               appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
