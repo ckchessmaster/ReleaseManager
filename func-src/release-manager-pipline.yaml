@@ -77,7 +77,7 @@ stages:
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
-  condition: succeeded()
+  condition: succeeded('Build')
   jobs:
   - deployment: Deploy
     displayName: Deploy
