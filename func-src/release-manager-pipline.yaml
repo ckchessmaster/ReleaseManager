@@ -5,30 +5,55 @@ trigger:
     - master
   paths:
     include:
-    - src/*
+    - func-src/*
 
 variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
   functionAppName: uan-fa-release-manager
   vmImageName: 'ubuntu-latest'
-  workingDirectory: '$(System.DefaultWorkingDirectory)/src'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/func-src'
+
+pool:
+  vmImage: $(vmImageName)
 
 stages:
+- stage: Test
+  displayName: Test
+  jobs:
+  - job: UnitTest
+    displayName: UnitTest
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python 3.8'
+      inputs:
+        versionSpec: 3.8
+    - script: |
+        pip install pytest
+        pit install pytest-cov
+      workingDirectory: $(workingDirectory)
+      displayName: 'Install Test Frameowrk'
+    - script: pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+      displayName: Run Tests
+    - task: PublishTestResults@2
+      displayName: Publish Test Results
+      condition: succeededOrFailed()
+      inputs:
+        testResultsFiles: '**/test-*.xml'
+        testRunTitle: 'Publish test results for Python $(python.version)'
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish Code Coverage
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
 - stage: Build
   displayName: Build stage
+  dependsOn: Test
+  condition: succeeded('Test')
   jobs:
   - job: Build
     displayName: Build
-    pool:
-      vmImage: $(vmImageName)
     steps:
-    - bash: |
-        if [ -f extensions.csproj ]
-        then
-            dotnet build extensions.csproj --runtime ubuntu.16.04-x64 --output ./bin
-        fi
-      workingDirectory: $(workingDirectory)
-      displayName: 'Build extensions'
     - task: UsePythonVersion@0
       displayName: 'Use Python 3.8'
       inputs:
