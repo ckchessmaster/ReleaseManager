@@ -89,10 +89,6 @@ stages:
     environment: 'development'
     strategy:
       runOnce:
-        preDeploy:
-          steps:
-          - script: npm install azure-functions-core-tools
-            displayName: Install Azure Function Core Tools
         deploy:
           steps:
           # - task: AzureFunctionApp@1
@@ -102,6 +98,8 @@ stages:
           #     appType: functionAppLinux
           #     appName: $(functionAppName)
           #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
+          - script: npm install azure-functions-core-tools
+            displayName: Install Azure Function Core Tools
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
             workingDirectory: $(Pipeline.Workspace)/drop
