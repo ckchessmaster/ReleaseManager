@@ -81,7 +81,6 @@ stages:
 #       artifact: drop
 - stage: Deploy
   displayName: Deploy
-  dependsOn: Test
   condition: succeeded('Test')
   jobs:
   - deployment: Deploy
