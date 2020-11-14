@@ -10,7 +10,7 @@ trigger:
 variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
   functionAppName: uan-fa-release-manager
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'windows-latest' #'ubuntu-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/func-src'
 
 pool:
@@ -103,10 +103,7 @@ stages:
           #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
           #     startUpCommand: source .venv/bin/activate
           # - script: sudo npm install -g azure-functions-core-tools@3
-          - task: Npm@1
-            inputs:
-              command: custom
-              customCommand: install -g azure-functions-core-tools@3
+          - script: npm i -g azure-functions-core-tools@3
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
             workingDirectory: $(Pipeline.Workspace)/drop
