@@ -98,8 +98,9 @@ stages:
           #     appType: functionAppLinux
           #     appName: $(functionAppName)
           #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
-          - script: npm i -g azure-functions-core-tools
+          - script: npm i azure-functions-core-tools
             displayName: Install Azure Function Core Tools
+            workingDirectory: $(Pipeline.Workspace)/drop
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
             workingDirectory: $(Pipeline.Workspace)/drop
