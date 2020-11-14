@@ -104,4 +104,4 @@ stages:
           #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
-            workingDirectory: $(workingDirectory)
+            workingDirectory: $(Pipeline.Workspace)/drop
