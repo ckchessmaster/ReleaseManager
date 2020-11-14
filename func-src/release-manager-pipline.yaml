@@ -76,7 +76,7 @@ stages:
     #     archiveType: zip
     #     archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
     #     replaceExistingArchive: true
-    - publish: $(workingDirectory)/func-src
+    - publish: $(workingDirectory)
       displayName: 'Upload Package'
       artifact: drop
 - stage: Deploy
