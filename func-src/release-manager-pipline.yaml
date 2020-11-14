@@ -63,8 +63,8 @@ stages:
         fi
       workingDirectory: $(workingDirectory)
     - bash: |
-        python -m venv .python_packages
-        source .python_packages/bin/activate
+        python -m venv .env
+        source .env/bin/activate
         pip install -r requirements.txt
       displayName: 'Install Dependencies'
       workingDirectory: $(workingDirectory)
