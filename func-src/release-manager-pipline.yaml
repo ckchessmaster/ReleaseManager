@@ -106,6 +106,15 @@ stages:
           #   displayName: Install Azure Function Core Tools
           #   workingDirectory: $(Pipeline.Workspace)/drop
           - task: FuncToolsInstaller@0
+          - task: AzureCLI@2
+            displayName: Azure CLI
+            inputs:
+              azureSubscription: default-azure
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az --version
+                az account show
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
             workingDirectory: $(Pipeline.Workspace)/drop
