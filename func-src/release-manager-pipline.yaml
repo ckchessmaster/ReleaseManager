@@ -102,7 +102,11 @@ stages:
           #     appName: $(functionAppName)
           #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
           #     startUpCommand: source .venv/bin/activate
-          - script: sudo npm install -g azure-functions-core-tools@3
+          # - script: sudo npm install -g azure-functions-core-tools@3
+          - task: Npm@1
+            inputs:
+              command: custom
+              customCommand: install -g azure-functions-core-tools@3
           - script: func azure functionapp publish uan-fa-release-manager
             displayName: Deploy
             workingDirectory: $(Pipeline.Workspace)/drop
