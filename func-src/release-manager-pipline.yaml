@@ -109,7 +109,7 @@ stages:
           - task: AzureCLI@2
             displayName: Azure CLI
             inputs:
-              azureSubscription: default-azure
+              azureSubscription: azure-default
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
