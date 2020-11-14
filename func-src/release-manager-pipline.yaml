@@ -44,41 +44,41 @@ stages:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
-- stage: Build
-  displayName: Build
-  dependsOn: Test
-  condition: succeeded('Test')
-  jobs:
-  - job: Build
-    displayName: Build
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python 3.8'
-      inputs:
-        versionSpec: 3.8
-    - bash: |
-        if [-f extensions.csproj ]
-        then
-          dotnet build extensions.csproj -output
-        fi
-      workingDirectory: $(workingDirectory)
-    - bash: |
-        python -m venv .venv
-        source .venv/bin/activate
-        pip install -r requirements.txt
-      displayName: 'Install Dependencies'
-      workingDirectory: $(workingDirectory)
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
-      inputs:
-        rootFolderOrFile: '$(workingDirectory)'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
-        replaceExistingArchive: true
-    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
-      displayName: 'Upload Package'
-      artifact: drop
+# - stage: Build
+#   displayName: Build
+#   dependsOn: Test
+#   condition: succeeded('Test')
+#   jobs:
+#   - job: Build
+#     displayName: Build
+#     steps:
+#     - task: UsePythonVersion@0
+#       displayName: 'Use Python 3.8'
+#       inputs:
+#         versionSpec: 3.8
+#     - bash: |
+#         if [-f extensions.csproj ]
+#         then
+#           dotnet build extensions.csproj -output
+#         fi
+#       workingDirectory: $(workingDirectory)
+#     - bash: |
+#         python -m venv .venv
+#         source .venv/bin/activate
+#         pip install -r requirements.txt
+#       displayName: 'Install Dependencies'
+#       workingDirectory: $(workingDirectory)
+#     - task: ArchiveFiles@2
+#       displayName: 'Archive files'
+#       inputs:
+#         rootFolderOrFile: '$(workingDirectory)'
+#         includeRootFolder: false
+#         archiveType: zip
+#         archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
+#         replaceExistingArchive: true
+#     - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
+#       displayName: 'Upload Package'
+#       artifact: drop
 - stage: Deploy
   displayName: Deploy
   dependsOn: Build
@@ -93,10 +93,15 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: AzureFunctionApp@1
-            displayName: 'Azure functions app deploy'
-            inputs:
-              azureSubscription: '$(subscription)'
-              appType: functionAppLinux
-              appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
+          # - task: AzureFunctionApp@1
+          #   displayName: 'Azure functions app deploy'
+          #   inputs:
+          #     azureSubscription: '$(subscription)'
+          #     appType: functionAppLinux
+          #     appName: $(functionAppName)
+          #     package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
+          - script: npm install azure-functions-core-tools
+            displayName: Install Azure Function Core Tools
+          - script: func azure functionapp publish uan-fa-release-manager
+            displayName: Deploy
+            workingDirectory: $(workingDirectory)

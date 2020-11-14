@@ -1,5 +1,5 @@
 {
-  "azureFunctions.deploySubpath": "ReleaseManager",
+  "azureFunctions.deploySubpath": "func-src",
   "azureFunctions.scmDoBuildDuringDeployment": true,
   "azureFunctions.projectLanguage": "Python",
   "azureFunctions.projectRuntime": "~3",
