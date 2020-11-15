@@ -10,7 +10,7 @@ trigger:
 variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
   functionAppName: uan-fa-release-manager
-  vmImageName: 'windows-latest' #'ubuntu-latest'
+  vmImageName: 'ubuntu-latest' # 'windows-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/func-src'
 
 pool:
