@@ -90,7 +90,7 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy
-    environment: 'development'
+    environment: 'production'
     strategy:
       runOnce:
         deploy:
