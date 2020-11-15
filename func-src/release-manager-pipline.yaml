@@ -10,7 +10,7 @@ trigger:
 variables:
   subscription: '9fba6314-ec74-4f90-ae35-ffc7d68ceca4'
   functionAppName: uan-fa-release-manager
-  vmImageName: 'ubuntu-latest' # 'windows-latest'
+  vmImageName: 'ubuntu-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/func-src'
 
 pool:
@@ -23,27 +23,33 @@ stages:
   - job: UnitTest
     displayName: UnitTest
     steps:
+
     - task: UsePythonVersion@0
       displayName: 'Use Python 3.8'
       inputs:
         versionSpec: 3.8
+
     - script: pip install -r requirements.txt
       workingDirectory: $(workingDirectory)
       displayName: 'Install Dependencies'
+
     - script: pytest $(workingDirectory)/tests --doctest-modules --junitxml=junit/test-results.xml
       displayName: Run Tests
+
     - task: PublishTestResults@2
       displayName: Publish Test Results
       condition: succeededOrFailed()
       inputs:
         testResultsFiles: '**/test-*.xml'
         testRunTitle: 'Publish test results for Python $(python.version)'
+
     - task: PublishCodeCoverageResults@1
       displayName: Publish Code Coverage
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
         reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+
 - stage: Build
   displayName: Build
   dependsOn: Test
@@ -52,6 +58,7 @@ stages:
   - job: Build
     displayName: Build
     steps:
+
     - task: UsePythonVersion@0
       displayName: 'Use Python 3.8'
       inputs:
@@ -83,6 +90,7 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
       displayName: 'Upload Package'
       artifact: drop
+
 - stage: Deploy
   displayName: Deploy
   dependsOn: Build
@@ -95,6 +103,7 @@ stages:
       runOnce:
         deploy:
           steps:
+          
           - task: AzureFunctionApp@1
             displayName: 'Azure functions app deploy'
             inputs:

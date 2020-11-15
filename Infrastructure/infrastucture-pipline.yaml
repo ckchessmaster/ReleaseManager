@@ -20,6 +20,7 @@ stages:
   jobs:
   - job: Deploy
     steps:
+    
     - task: AzureCLI@2
       displayName: Create Resource Group
       inputs:
@@ -27,6 +28,7 @@ stages:
         scriptType: pscore
         scriptLocation: inlineScript
         inlineScript: az group create --location $(location) --name $(resourceGroup) --subscription $(subscription)
+
     - task: AzureResourceGroupDeployment@2
       displayName: Create Release Management App Infrastructure
       inputs:
