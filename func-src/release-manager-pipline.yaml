@@ -56,14 +56,21 @@ stages:
       displayName: 'Use Python 3.8'
       inputs:
         versionSpec: 3.8
+
     - bash: |
-        if [-f extensions.csproj ]
+        if [ -f extensions.csproj ]
         then
           dotnet build extensions.csproj -output
         fi
-        pip install --target="./python_packages/lib/site-packages" -r ./requirements.txt
       workingDirectory: $(workingDirectory)
-      displayName: 'Install Dependencies'
+      displayName: Build Extensions
+
+    - bash: |
+        pip install --upgrade pip
+        pip install --target=".python_packages/lib/site-packages" -r requirements.txt
+      displayName: Install Dependencies
+      workingDirectory: $(workingDirectory)
+
     - task: ArchiveFiles@2
       displayName: 'Archive files'
       inputs:
@@ -72,6 +79,7 @@ stages:
         archiveType: zip
         archiveFile: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
         replaceExistingArchive: true
+        
     - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
       displayName: 'Upload Package'
       artifact: drop
