@@ -259,7 +259,7 @@
           "index.php"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "Python|3.7",
+        "linuxFxVersion": "Python|3.8",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "httpLoggingEnabled": false,
