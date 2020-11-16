@@ -13,9 +13,6 @@
     },
     "applicationInsights": {
       "value": "uan-ai-release-manager"
-    },
-    "functionResourceGroupName": {
-      "value": "uan-rg-rts"
     }
   }
 }
