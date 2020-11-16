@@ -88,7 +88,7 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerFunctionApp$(Build.BuildId).zip
       displayName: 'Upload Package'
-      artifact: drop
+      artifact: func
 
 - stage: Deploy
   displayName: Deploy
@@ -109,4 +109,4 @@ stages:
               azureSubscription: '$(subscription)'
               appType: functionAppLinux
               appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/ReleaseManagerFunctionApp$(Build.BuildId).zip'
+              package: '$(Pipeline.Workspace)/func/ReleaseManagerFunctionApp$(Build.BuildId).zip'
