@@ -7,6 +7,9 @@
         },
         "appServicePlanName": {
             "value": "uan-asp-release-manager-shared"
+        },
+        "applicationInsightsName": {
+          "value": "uan-ai-release-manager"
         }
     }
 }
