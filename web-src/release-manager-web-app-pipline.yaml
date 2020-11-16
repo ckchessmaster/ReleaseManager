@@ -12,6 +12,7 @@ variables:
   workingDirectory: '$(System.DefaultWorkingDirectory)/web-src'
   azureSubscription: 'azure-default'
   appName: uan-as-release-manager
+  nodeVersion: '12.13'
 
 pool:
   vmImage: $(vmImageName)
@@ -26,7 +27,7 @@ stages:
   #   - task: NodeTool@0
   #     displayName: Set Node Version
   #     inputs:
-  #       versionSpec: '14.15'
+  #       versionSpec: $(nodeVersion)
 
   #   - script: npm run lint
   #     displayName: Lint code
@@ -38,7 +39,7 @@ stages:
     - task: NodeTool@0
       displayName: Set Node Version
       inputs:
-        versionSpec: '14.15'
+        versionSpec: $(nodeVersion)
 
     - script: npm install
       displayName: Install Dependencies
@@ -72,7 +73,7 @@ stages:
     - task: NodeTool@0
       displayName: Set Node Version
       inputs:
-        versionSpec: '14.15'
+        versionSpec: '12.13'
 
     - script: npm install
       displayName: Install Dependencies
