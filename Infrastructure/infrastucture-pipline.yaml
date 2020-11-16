@@ -33,7 +33,7 @@ stages:
         inlineScript: az group create --location $(location) --name $(resourceGroup) --subscription $(subscription)
 
     - task: AzureResourceGroupDeployment@2
-      displayName: Create Release Management App Infrastructure
+      displayName: Create Release Management Function App Infrastructure
       inputs:
         azureSubscription: azure-default
         resourceGroupName: $(resourceGroup)
@@ -57,7 +57,7 @@ stages:
         inlineScript: az group create --location $(location) --name $(resourceGroupShared) --subscription $(subscription)
 
     - task: AzureResourceGroupDeployment@2
-      displayName: Create Release Management App Infrastructure
+      displayName: Create Release Management Web App Infrastructure
       inputs:
         azureSubscription: azure-default
         resourceGroupName: $(resourceGroupShared)
