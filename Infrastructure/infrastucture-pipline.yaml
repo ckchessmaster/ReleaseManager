@@ -20,7 +20,8 @@ pool:
 stages:
 - stage: Deploy
   jobs:
-  - job: Deploy Release Manager Function App Infrastructure
+  - job: DeployFunctionAppInfra
+    displayName: Deploy Release Manager Function App Infrastructure
     steps:
     
     - task: AzureCLI@2
@@ -43,7 +44,8 @@ stages:
         csmFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerFunctionApp.json'
         csmParametersFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerFunctionApp.parameters.json'
 
-  - job: Deploy Release Manager Web App
+  - job: DeployWebAppInfra
+    displayName: Deploy Release Manager Web App
     steps:
     
     - task: AzureCLI@2
