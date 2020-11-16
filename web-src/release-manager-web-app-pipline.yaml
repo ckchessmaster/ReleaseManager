@@ -94,7 +94,7 @@ stages:
 
     - publish: '$(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip'
       displayName: 'Upload Package'
-      artifact: drop
+      artifact: app
 
 - stage: Deploy
   displayName: Deploy
@@ -114,4 +114,4 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(appName)
-              package: $(System.ArtifactsDirectory)/**/*.zip
+              package: '$(System.ArtifactsDirectory)/app/ReleaseManagerWebApp(Build.BuildId).zip'
