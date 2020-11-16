@@ -13,6 +13,8 @@ variables:
   azureSubscription: 'azure-default'
   appName: uan-app-release-manager
   nodeVersion: '12.13'
+  applicationId: 36f8390e-71e7-4a12-94ac-20d4dcbee7d0
+  tenantId: 33733cf0-747e-41fc-b9c4-17823e2ef545
 
 pool:
   vmImage: $(vmImageName)
