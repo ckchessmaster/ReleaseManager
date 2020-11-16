@@ -46,6 +46,7 @@ stages:
 
   - job: DeployWebAppInfra
     displayName: Deploy Release Manager Web App
+    dependsOn: DeployFunctionAppInfra
     steps:
     
     - task: AzureCLI@2
