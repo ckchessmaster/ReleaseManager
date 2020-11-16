@@ -85,15 +85,6 @@ stages:
       displayName: Build Vue App
       workingDirectory: $(workingDirectory)
 
-    # - task: ArchiveFiles@2
-    #   displayName: Archive files
-    #   inputs:
-    #     rootFolderOrFile: '$(workingDirectory)/dist'
-    #     includeRootFolder: false
-    #     archiveType: zip
-    #     replaceExistingArchive: true
-    #     archiveFile: '$(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip'
-
     - publish: '$(workingDirectory)/dist'
       displayName: 'Upload Package'
       artifact: site
@@ -114,5 +105,5 @@ stages:
             displayName: Login Service Principal
             env:
               AZCOPY_SPA_CLIENT_SECRET: $(AZCOPY_SPA_CLIENT_SECRET)
-          - script: 'azcopy10 cp "$(Pipeline.Workspace)/site" "https://uansagamerelease.blob.core.windows.net/$web" --put-md5'
+          - script: 'azcopy10 cp "$(Pipeline.Workspace)/site/**" "https://uansagamerelease.blob.core.windows.net/$web" --put-md5'
             displayName: Publish to Azure Blob Storage
