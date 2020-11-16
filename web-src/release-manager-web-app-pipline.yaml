@@ -74,7 +74,7 @@ stages:
       inputs:
         versionSpec: '14.15'
 
-    - script: npm install --production
+    - script: npm install
       displayName: Install Dependencies
       workingDirectory: $(workingDirectory)
 
