@@ -88,8 +88,11 @@ stages:
       inputs:
         rootFolderOrFile: '$(workingDirectory)/dist'
         includeRootFolder: false
+        archiveType: zip
+        replaceExistingArchive: true
+        archiveFile: '$(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip'
 
-    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip
+    - publish: '$(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip'
       displayName: 'Upload Package'
       artifact: drop
 
