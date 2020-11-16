@@ -1,0 +1,113 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - web-src/*
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  workingDirectory: '$(System.DefaultWorkingDirectory)/web-src'
+  azureSubscription: 'azure-default'
+  appName: uan-as-release-manager
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+- stage: Test
+  displayName: Test
+  jobs:
+  - job: Lint
+    displayName: Lint
+    steps:
+    - task: NodeTool@0
+      displayName: Set Node Version
+      inputs:
+        versionSpec: '14.15'
+
+    - script: npm run lint
+      displayName: Lint code
+      workingDirectory: $(workingDirectory)
+
+  - job: UnitTest
+    displayName: UnitTest
+    steps:
+    - task: NodeTool@0
+      displayName: Set Node Version
+      inputs:
+        versionSpec: '14.15'
+
+    - script: npm install
+      displayName: Install Dependencies
+      workingDirectory: $(workingDirectory)
+
+    - script: npm run test:unit
+      displayName: Run Unit Tests
+      workingDirectory: $(workingDirectory)
+
+    - task: PublishTestResults@2
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: '$(workingDirectory)/**/TEST-RESULTS.xml'
+
+    - task: PublishCodeCoverageResults@1
+      inputs: 
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(workingDirectory)/**/*coverage.xml'
+        reportDirectory: '$(workingDirectory)/**/coverage'
+
+- stage: Build
+  displayName: Build
+  dependsOn: Test
+  condition: succeeded('Test')
+
+  jobs:
+  - job: Build
+    displayName: Build
+    steps:
+    - task: NodeTool@0
+      displayName: Set Node Version
+      inputs:
+        versionSpec: '14.15'
+
+    - script: npm install --production
+      displayName: Install Dependencies
+      workingDirectory: $(workingDirectory)
+
+    - script: npm run build
+      displayName: Build Vue App
+      workingDirectory: $(workingDirectory)
+
+    - task: ArchiveFiles@2
+      displayName: Archive files
+      inputs:
+        rootFolderOrFile: '$(workingDirectory)/dist'
+        includeRootFolder: false
+
+    - publish: $(Build.ArtifactStagingDirectory)/ReleaseManagerWebApp$(Build.BuildId).zip
+      displayName: 'Upload Package'
+      artifact: drop
+
+- stage: Deploy
+  displayName: Deploy
+  dependsOn: Build
+  condition: succeeded('Build')
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy
+    environment: 'production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: 'Azure Web App Deploy'
+            inputs:
+              azureSubscription: $(azureSubscription)
+              appType: webAppLinux
+              appName: $(appName)
+              package: $(System.ArtifactsDirectory)/**/*.zip

@@ -9,16 +9,18 @@ trigger:
 
 variables:
   resourceGroup: uan-rg-rts
+  resourceGroupShared: uan-rg-rts-shared
   location: eastus
   subscription: 0cd1b4a4-98c0-48dd-900e-532a1f9a345c
   vmImageName: 'ubuntu-latest'
 
+pool:
+    vmImage: $(vmImageName)
+
 stages:
 - stage: Deploy
-  pool:
-    vmImage: $(vmImageName)
   jobs:
-  - job: Deploy
+  - job: Deploy Release Manager Function App
     steps:
     
     - task: AzureCLI@2
@@ -38,5 +40,28 @@ stages:
         location: $(location)
         templateLocation: 'Linked artifact'
         deploymentMode: Incremental
-        csmFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagementApp.json'
-        csmParametersFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagementApp.parameters.json'
+        csmFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerFunctionApp.json'
+        csmParametersFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerFunctionApp.parameters.json'
+
+  - job: Deploy Release Manager Web App
+    steps:
+    
+    - task: AzureCLI@2
+      displayName: Create Resource Group
+      inputs:
+        azureSubscription: azure-default
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: az group create --location $(location) --name $(resourceGroupShared) --subscription $(subscription)
+
+    - task: AzureResourceGroupDeployment@2
+      displayName: Create Release Management App Infrastructure
+      inputs:
+        azureSubscription: azure-default
+        resourceGroupName: $(resourceGroupShared)
+        action: 'Create Or Update Resource Group'
+        location: $(location)
+        templateLocation: 'Linked artifact'
+        deploymentMode: Incremental
+        csmFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerWebApp.json'
+        csmParametersFile: '$(Build.SourcesDirectory)/Infrastructure/ARM/releaseManagerWebApp.parameters.json'

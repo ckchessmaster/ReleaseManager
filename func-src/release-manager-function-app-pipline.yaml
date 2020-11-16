@@ -23,32 +23,32 @@ stages:
   - job: UnitTest
     displayName: UnitTest
     steps:
-
     - task: UsePythonVersion@0
       displayName: 'Use Python 3.8'
       inputs:
         versionSpec: 3.8
 
     - script: pip install -r requirements.txt
-      workingDirectory: $(workingDirectory)
       displayName: 'Install Dependencies'
+      workingDirectory: $(workingDirectory)
 
     - script: pytest $(workingDirectory)/tests --doctest-modules --junitxml=junit/test-results.xml
       displayName: Run Tests
+      workingDirectory: $(workingDirectory)
 
     - task: PublishTestResults@2
       displayName: Publish Test Results
       condition: succeededOrFailed()
       inputs:
-        testResultsFiles: '**/test-*.xml'
+        testResultsFiles: '$(workingDirectory)/**/test-*.xml'
         testRunTitle: 'Publish test results for Python $(python.version)'
 
     - task: PublishCodeCoverageResults@1
       displayName: Publish Code Coverage
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: '$(workingDirectory)/**/coverage.xml'
+        reportDirectory: '$(workingDirectory)/**/htmlcov'
 
 - stage: Build
   displayName: Build
@@ -58,7 +58,6 @@ stages:
   - job: Build
     displayName: Build
     steps:
-
     - task: UsePythonVersion@0
       displayName: 'Use Python 3.8'
       inputs:

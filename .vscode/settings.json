@@ -3,5 +3,10 @@
   "azureFunctions.scmDoBuildDuringDeployment": true,
   "azureFunctions.projectLanguage": "Python",
   "azureFunctions.projectRuntime": "~3",
-  "debug.internalConsoleOptions": "neverOpen"
+  "debug.internalConsoleOptions": "neverOpen",
+  "appService.zipIgnorePattern": [
+    "node_modules{,/**}",
+    ".vscode{,/**}"
+  ],
+  "appService.defaultWebAppToDeploy": "None"
 }
