@@ -20,17 +20,17 @@ stages:
 - stage: Test
   displayName: Test
   jobs:
-  - job: Lint
-    displayName: Lint
-    steps:
-    - task: NodeTool@0
-      displayName: Set Node Version
-      inputs:
-        versionSpec: '14.15'
+  # - job: Lint
+  #   displayName: Lint
+  #   steps:
+  #   - task: NodeTool@0
+  #     displayName: Set Node Version
+  #     inputs:
+  #       versionSpec: '14.15'
 
-    - script: npm run lint
-      displayName: Lint code
-      workingDirectory: $(workingDirectory)
+  #   - script: npm run lint
+  #     displayName: Lint code
+  #     workingDirectory: $(workingDirectory)
 
   - job: UnitTest
     displayName: UnitTest
