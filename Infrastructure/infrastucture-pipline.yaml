@@ -20,7 +20,7 @@ pool:
 stages:
 - stage: Deploy
   jobs:
-  - job: Deploy Release Manager Function App
+  - job: Deploy Release Manager Function App Infrastructure
     steps:
     
     - task: AzureCLI@2
