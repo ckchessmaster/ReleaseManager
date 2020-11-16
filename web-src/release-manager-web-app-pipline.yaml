@@ -108,7 +108,9 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: AzureFileCopy@4
-            displayName: Deploy Site
-            inputs:
-              sourcePath: $(Pipeline.Workspace)/site
+          - script: azcopy login --service-principal --application-id $(applicationId) --tenant-id=$(tenantId)
+            displayName: Login Service Principal
+            env:
+              AZCOPY_SPA_CLIENT_SECRET: $(AZCOPY_SPA_CLIENT_SECRET)
+          - script: 'azcopy cp "$(Pipeline.Workspace)/site" "https://uansagamerelease.blob.core.windows.net/$web" --put-md5'
+            displayName: Publish to Azure Blob Storage
