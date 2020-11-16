@@ -11,7 +11,7 @@ variables:
   vmImageName: 'ubuntu-latest'
   workingDirectory: '$(System.DefaultWorkingDirectory)/web-src'
   azureSubscription: 'azure-default'
-  appName: uan-as-release-manager
+  appName: uan-app-release-manager
   nodeVersion: '12.13'
 
 pool:
