@@ -73,7 +73,7 @@ stages:
     - task: NodeTool@0
       displayName: Set Node Version
       inputs:
-        versionSpec: '12.13'
+        versionSpec: $(nodeVersion)
 
     - script: npm install
       displayName: Install Dependencies
