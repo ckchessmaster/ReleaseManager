@@ -105,5 +105,5 @@ stages:
             displayName: Login Service Principal
             env:
               AZCOPY_SPA_CLIENT_SECRET: $(AZCOPY_SPA_CLIENT_SECRET)
-          - script: 'azcopy10 cp "$(Pipeline.Workspace)/site/*" "https://uansagamerelease.blob.core.windows.net/test/" --recursive'
+          - script: 'azcopy10 cp "$(Pipeline.Workspace)/site/*" "https://uansagamerelease.blob.core.windows.net/%24web/" --recursive'
             displayName: Publish to Azure Blob Storage
