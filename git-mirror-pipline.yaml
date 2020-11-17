@@ -4,8 +4,11 @@ trigger:
     include:
     - master
 
+variables:
+  vmImageName: 'ubuntu-latest'
+
 pool:
-  name: LocalPool
+  vmImage: $(vmImageName)
 
 jobs:
 - job: update_mirror
