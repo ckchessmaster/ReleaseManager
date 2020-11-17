@@ -13,5 +13,5 @@ jobs:
   steps:
   - script: 'git checkout master && git -c http.extraheader="AUTHORIZATION: bearer $(System.AccessToken)" pull'
     displayName: Checkout and Update Master
-  - script: git push --mirror https://$(GITHUB_PAT)@github.com/ckchessmaster/rts.git
+  - script: git push --mirror https://$(GITHUB_PAT)github.com/ckchessmaster/ReleaseManager.git
     displayName: Update Github Mirror
