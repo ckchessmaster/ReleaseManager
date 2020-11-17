@@ -11,7 +11,7 @@ export class ReleaseService {
     let releases = xml.getElementsByTagName('Name')
 
     if (releases.length < 2) {
-      return this.getVersionFromName(releases[0])
+      return this.getVersionFromName(releases[0].innerHTML)
     }
     
     let maxRelease = releases[0].innerHTML
