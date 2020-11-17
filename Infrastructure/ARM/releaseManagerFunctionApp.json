@@ -83,7 +83,38 @@
       },
       "properties": {
         "cors": {
-          "corsRules": []
+          "corsRules": [
+            {
+              "allowedOrigins": [
+                "http://upallnightgames.chriskingdon.com"
+              ],
+              "allowedMethods": [
+                "GET"
+              ],
+              "maxAgeInSeconds": 0,
+              "exposedHeaders": [
+                ""
+              ],
+              "allowedHeaders": [
+                ""
+              ]
+            },
+            {
+              "allowedOrigins": [
+                "https://upallnightgames.chriskingdon.com"
+              ],
+              "allowedMethods": [
+                "GET"
+              ],
+              "maxAgeInSeconds": 0,
+              "exposedHeaders": [
+                ""
+              ],
+              "allowedHeaders": [
+                ""
+              ]
+            }
+          ]
         },
         "deleteRetentionPolicy": {
           "enabled": false
