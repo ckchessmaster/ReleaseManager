@@ -1,28 +1,56 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Navigation />
+    <div id="download-container">
+      <h2>Current Version: v{{currentReleaseVersion}}</h2>
+      <a class="btn" :href="downloadLink">Download</a>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { ReleaseService } from './services/releaseService'
+
+import Navigation from './components/Navigation.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Navigation
+  },
+  data: () => ({
+    releaseService: null,
+    currentReleaseVersion: '',
+    downloadLink: ''
+  }),
+  async mounted () {
+    this.releaseService = new ReleaseService()
+    this.currentReleaseVersion = await this.releaseService.getLatestRelease()
+    this.downloadLink = this.releaseService.getDownloadLink(this.currentReleaseVersion)
   }
 }
 </script>
 
-<style>
+<style lang="scss">
+@import '@/styles/main.scss';
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
+}
+
+#download-container {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+h2 {
+  padding: 10px;
 }
 </style>
