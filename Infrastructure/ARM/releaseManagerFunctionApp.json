@@ -50,7 +50,7 @@
           "ipRules": [],
           "defaultAction": "Allow"
         },
-        "supportsHttpsTrafficOnly": true,
+        "supportsHttpsTrafficOnly": false,
         "encryption": {
           "services": {
             "file": {
@@ -64,7 +64,10 @@
           },
           "keySource": "Microsoft.Storage"
         },
-        "accessTier": "Hot"
+        "accessTier": "Hot",
+        "customDomain": {
+          "name": "upallnightgames.chriskingdon.com"
+        }
       }
     },
     {
@@ -98,7 +101,7 @@
       "properties": {
         "defaultEncryptionScope": "$account-encryption-key",
         "denyEncryptionScopeOverride": false,
-        "publicAccess": "Blob"
+        "publicAccess": "Container"
       }
     },
     {

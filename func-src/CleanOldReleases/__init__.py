@@ -35,8 +35,7 @@ def main(mytimer: func.TimerRequest) -> None:
   logging.info(f'Cleaning complete.')
 
 def get_version_from_name(name):
-  version_tag = name.split('-')
-  version_number = version_tag[-1].replace('v', '')
+  version_number = name.split('-v')[-1]
 
   return version_number
 
