@@ -59,12 +59,12 @@ stages:
       condition: succeededOrFailed()
       inputs:
         testRunner: JUnit
-        testResultsFiles: '$(workingDirectory)/**/TEST-RESULTS.xml'
+        testResultsFiles: '$(workingDirectory)/**/junit.xml'
 
     - task: PublishCodeCoverageResults@1
       inputs: 
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(workingDirectory)/**/*coverage.xml'
+        summaryFileLocation: '$(workingDirectory)/**/*clover.xml'
         reportDirectory: '$(workingDirectory)/**/coverage'
 
 - stage: Build

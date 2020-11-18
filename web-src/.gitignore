@@ -1,3 +1,7 @@
+# Testing stuff
+coverage
+junit.xml
+
 .DS_Store
 node_modules
 /dist
