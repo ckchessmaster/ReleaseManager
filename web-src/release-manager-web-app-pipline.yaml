@@ -23,17 +23,21 @@ stages:
 - stage: Test
   displayName: Test
   jobs:
-  # - job: Lint
-  #   displayName: Lint
-  #   steps:
-  #   - task: NodeTool@0
-  #     displayName: Set Node Version
-  #     inputs:
-  #       versionSpec: $(nodeVersion)
+  - job: Lint
+    displayName: Lint
+    steps:
+    - task: NodeTool@0
+      displayName: Set Node Version
+      inputs:
+        versionSpec: $(nodeVersion)
 
-  #   - script: npm run lint
-  #     displayName: Lint code
-  #     workingDirectory: $(workingDirectory)
+    - script: npm ci
+      displayName: Install Dependencies
+      workingDirectory: $(workingDirectory)
+
+    - script: npm run lint
+      displayName: Lint code
+      workingDirectory: $(workingDirectory)
 
   - job: UnitTest
     displayName: UnitTest
@@ -77,7 +81,7 @@ stages:
       inputs:
         versionSpec: $(nodeVersion)
 
-    - script: npm install
+    - script: npm ci
       displayName: Install Dependencies
       workingDirectory: $(workingDirectory)
 
