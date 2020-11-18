@@ -43,7 +43,7 @@ stages:
       inputs:
         versionSpec: $(nodeVersion)
 
-    - script: npm install
+    - script: npm ci
       displayName: Install Dependencies
       workingDirectory: $(workingDirectory)
 
