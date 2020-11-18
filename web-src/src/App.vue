@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { ReleaseService } from './services/releaseService'
+import ReleaseService from './services/releaseService'
 
 import Navigation from './components/Navigation.vue'
 

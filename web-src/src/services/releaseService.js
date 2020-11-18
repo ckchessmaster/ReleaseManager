@@ -1,6 +1,6 @@
-const axios = require('axios')
+import axios from 'axios';
 
-export class ReleaseService {
+export default class ReleaseService {
   baseUrl = 'https://uansagamerelease.blob.core.windows.net/clientreleases'
 
   async getLatestRelease() {
