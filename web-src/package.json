@@ -5,10 +5,14 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit --ci --reporters=default --reporters=jest-junit --collect-coverage --coverageDirectory=tests/unit/coverage",
+    "test:unit": "vue-cli-service test:unit --ci --coverage --coverageDirectory=coverage",
     "lint": "vue-cli-service lint"
   },
   "jest": {
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "coverageReporters": [
       "text",
       "cobertura"

@@ -64,7 +64,7 @@ stages:
     - task: PublishCodeCoverageResults@1
       inputs: 
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(workingDirectory)/**/*clover.xml'
+        summaryFileLocation: '$(workingDirectory)/**/*coverage.xml'
         reportDirectory: '$(workingDirectory)/**/coverage'
 
 - stage: Build
