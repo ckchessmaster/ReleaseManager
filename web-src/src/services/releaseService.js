@@ -8,7 +8,9 @@ export default class ReleaseService {
 
     let parser = new DOMParser()
     let xml = parser.parseFromString(response.data, "text/xml")
-    let releases = xml.getElementsByTagName('Name')
+    let releases = Array.from(xml.getElementsByTagName('Name'))
+
+    releases = releases.filter(release => release.innerHTML.includes('Client'))
 
     if (releases.length < 2) {
       return this.getVersionFromName(releases[0].innerHTML)
@@ -30,7 +32,7 @@ export default class ReleaseService {
   }
 
   getDownloadLink(version) {
-    return `${this.baseUrl}/game-v${version}.zip`
+    return `${this.baseUrl}/gameClient-v${version}.zip`
   }
 
   getVersionFromName(name) {
