@@ -8,5 +8,6 @@
     "node_modules{,/**}",
     ".vscode{,/**}"
   ],
-  "appService.defaultWebAppToDeploy": "None"
+  "appService.defaultWebAppToDeploy": "None",
+  "python.linting.enabled": false
 }

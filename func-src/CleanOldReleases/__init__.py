@@ -10,16 +10,37 @@ def main(mytimer: func.TimerRequest) -> None:
   blob_service_client = BlobServiceClient.from_connection_string(connect_str)
   container_client = blob_service_client.get_container_client("clientreleases")
 
-  previous_releases = [b.name for b in list(container_client.list_blobs())]
+  releases = [b.name for b in list(container_client.list_blobs())]
 
   # No need to go further, we know this is the max release
-  if (len(previous_releases) < 2):
+  if (len(releases) < 2):
     return
 
-  max_release = previous_releases[0]
+  client_releases = list(filter(lambda release: 'Client' in release, releases))
+  server_releases = list(filter(lambda release: 'Server' in release, releases))
+
+  if len(client_releases) > 0:
+    releases.remove(get_max_version(client_releases))
+  
+  if len(server_releases) > 0:
+    releases.remove(get_max_version(server_releases))
+
+  # previous_releases.remove(max_release)
+
+  container_client.delete_blobs(*releases)
+  
+  logging.info(f'Cleaning complete.')
+
+def get_version_from_name(name):
+  version_number = name.split('-v')[-1]
+
+  return version_number
+
+def get_max_version(releases):
+  max_release = releases[0]
   max_version = get_version_from_name(max_release)
 
-  iterator = iter(previous_releases)
+  iterator = iter(releases)
   next(iterator) # Skip the 1st one
 
   for release in iterator:
@@ -28,16 +49,7 @@ def main(mytimer: func.TimerRequest) -> None:
       max_release = release
       max_version = release_version
 
-  previous_releases.remove(max_release)
-
-  container_client.delete_blobs(*previous_releases)
-  
-  logging.info(f'Cleaning complete.')
-
-def get_version_from_name(name):
-  version_number = name.split('-v')[-1]
-
-  return version_number
+  return max_release
 
 def compare_version_numbers(version1, version2):
   version1_parts = version1.split('.')
