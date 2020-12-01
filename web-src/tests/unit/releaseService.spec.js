@@ -13,7 +13,7 @@ describe('When getting the latest release', () => {
       <EnumerationResults ContainerName="https://uansagamerelease.blob.core.windows.net/clientreleases">
         <Blobs>
           <Blob>
-            <Name>game-v${expectedVersion}.zip</Name>
+            <Name>gameClient-v${expectedVersion}.zip</Name>
           </Blob>
         </Blobs>
       </EnumerationResults>` 
@@ -38,10 +38,10 @@ describe('When getting the latest release', () => {
       <EnumerationResults ContainerName="https://uansagamerelease.blob.core.windows.net/clientreleases">
         <Blobs>
           <Blob>
-            <Name>game-v${expectedVersion}.zip</Name>
+            <Name>gameClient-v${expectedVersion}.zip</Name>
           </Blob>
           <Blob>
-            <Name>game-v1.1.289.zip</Name>
+            <Name>gameClient-v1.1.289.zip</Name>
           </Blob>
         </Blobs>
       </EnumerationResults>` 
@@ -66,10 +66,10 @@ describe('When getting the latest release', () => {
       <EnumerationResults ContainerName="https://uansagamerelease.blob.core.windows.net/clientreleases">
         <Blobs>
           <Blob>
-            <Name>game-v${expectedVersion}.zip</Name>
+            <Name>gameClient-v${expectedVersion}.zip</Name>
           </Blob>
           <Blob>
-            <Name>game-v1.1.289.zip</Name>
+            <Name>gameClient-v1.1.289.zip</Name>
           </Blob>
         </Blobs>
       </EnumerationResults>` 
@@ -94,10 +94,10 @@ describe('When getting the latest release', () => {
       <EnumerationResults ContainerName="https://uansagamerelease.blob.core.windows.net/clientreleases">
         <Blobs>
           <Blob>
-            <Name>game-v${expectedVersion}.zip</Name>
+            <Name>gameClient-v${expectedVersion}.zip</Name>
           </Blob>
           <Blob>
-            <Name>game-v1.1.289.zip</Name>
+            <Name>gameClient-v1.1.289.zip</Name>
           </Blob>
         </Blobs>
       </EnumerationResults>` 
